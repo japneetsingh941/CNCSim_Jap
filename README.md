@@ -21,3 +21,28 @@ To install the dependencies for a user, run the following command in the termina
 This repository contains material related to our arXiv preprint arXiv:2506.04033. Please note that the technology described herein is subject to a pending patent (application number: 2025/007146). Licensed under MIT, which does not grant patent rights. 
 
 For inquiries: cihan.okay@bilkent.edu.tr.
+
+## Five-qubit quantum error correction
+
+CNCSim includes a circuit implementation of the perfect `[[5,1,3]]` stabilizer
+code in `src/five_qubit_code.py`. It uses the project Pauli-string convention:
+the leftmost character is physical data qubit 0. The stabilizer syndrome is
+ordered `(S1, S2, S3, S4)`, where a bit is 1 when the check outcome is -1.
+
+For an exact arbitrary logical input and one Pauli error, use
+`simulate_recovery((alpha, beta), qubit, pauli)`. It encodes the logical state,
+measures the four checks, decodes the syndrome, applies recovery, then reports
+logical-state fidelity and the four post-recovery stabilizer expectations.
+`encoder_circuit`, `syndrome_extraction_circuit`, and
+`error_correction_circuit` expose the corresponding circuits for composition.
+`measure_syndrome_with_chp` executes the stabilizer-input path using the
+project's existing `ChpSimulator`.
+
+See `Five_Qubit_Error_Correction.ipynb` for a complete X/Y/Z error example.
+The notebook uses Qiskit's exact statevector simulator for arbitrary logical
+states and the existing CHP tableau simulator for stabilizer syndromes. The
+current `run_qcm` path does not initialize arbitrary logical states or support
+general syndrome-controlled recovery conditions, so this workflow does not
+route those operations through the CNC QASM runner.
+
+Run its tests with `python -m unittest discover -s tests -v`.
